@@ -316,6 +316,20 @@ export default function LoginPage({ onLogin }) {
 
         </div>
 
+        {/* Floating 'Buy Now' badge in bottom right (matching screenshot) */}
+        <div className="fixed bottom-6 right-6 z-40 hidden sm:block">
+          <button 
+            onClick={() => onLogin({ email: 'admin@demo.com', role: 'Administrator' })}
+            className="px-5 py-2.5 rounded-lg text-white font-semibold text-sm shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5"
+            style={{
+              background: 'linear-gradient(135deg, #e91e63 0%, #7367f0 100%)',
+              boxShadow: '0 8px 20px -4px rgba(233, 30, 99, 0.5)'
+            }}
+          >
+            Buy Now
+          </button>
+        </div>
+
       </div>
 
     </div>
