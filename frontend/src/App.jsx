@@ -13,6 +13,7 @@ import SwotChart from './components/charts/SwotChart';
 import TopTopicsChart from './components/charts/TopTopicsChart';
 import DataTable from './components/DataTable';
 import InsightModal from './components/InsightModal';
+import LoginPage from './components/LoginPage';
 import { 
   BarChart3, 
   Table as TableIcon, 
@@ -37,8 +38,11 @@ const INITIAL_FILTERS = {
 };
 
 export default function App() {
-  // Always default to clean, bright Light Mode
-  const [isDark, setIsDark] = useState(false);
+  // Authentication State (defaults to null so user sees Login Page first)
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem('vuexy_user');
+    return saved ? JSON.parse(saved) : null;
+  });
 
   const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'strategic' | 'table'
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -74,7 +78,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Clear any stored dark mode in localStorage on initial mount
+  // Clear any stored dark mode in localStorage on mount
   useEffect(() => {
     localStorage.removeItem('theme');
     document.body.classList.remove('dark');
@@ -84,6 +88,18 @@ export default function App() {
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(''), 3000);
+  };
+
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+    localStorage.setItem('vuexy_user', JSON.stringify(user));
+    showToast(`Signed in as ${user.email}`);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('vuexy_user');
+    showToast('Signed out successfully');
   };
 
   // 1. Initial Load: Filter Options
@@ -289,6 +305,11 @@ export default function App() {
       0
     ) - (filters.search ? 1 : 0);
 
+  // If user is not logged in, render the Vuexy Login Page
+  if (!currentUser) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] text-[#334155]">
       {/* Toast Notification */}
@@ -310,6 +331,8 @@ export default function App() {
         onResetFilters={handleResetFilters}
         onExportCSV={handleExportCSV}
         onExportJSON={handleExportJSON}
+        currentUser={currentUser}
+        onLogout={handleLogout}
       />
 
       {/* Main Content */}

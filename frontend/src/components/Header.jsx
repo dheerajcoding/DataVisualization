@@ -7,7 +7,9 @@ import {
   Download, 
   RotateCcw,
   BarChart2,
-  TrendingUp
+  TrendingUp,
+  LogOut,
+  User
 } from 'lucide-react';
 
 export default function Header({
@@ -19,7 +21,9 @@ export default function Header({
   activeFilterCount,
   onResetFilters,
   onExportCSV,
-  onExportJSON
+  onExportJSON,
+  currentUser,
+  onLogout
 }) {
   return (
     <header className="sticky top-0 z-40 bg-[var(--bg-surface-glass)] backdrop-blur-md border-b border-[var(--border-color)] px-4 lg:px-8 py-2.5 transition-all shadow-xs">
@@ -28,21 +32,23 @@ export default function Header({
         {/* Brand & Logo */}
         <div className="flex items-center justify-between w-full md:w-auto gap-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#2563EB] to-[#60A5FA] flex items-center justify-center text-white shadow-sm shadow-[#2563eb30]">
-              <TrendingUp className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#7367F0] to-[#9E95F5] flex items-center justify-center text-white shadow-sm shadow-[#7367f035]">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M4.5 4.5 L9.5 19.5 L14.5 4.5 L19.5 19.5" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-lg font-bold tracking-tight text-[var(--text-heading)]">
-                  InsightPulse
+                  Vuexy
                 </h1>
                 <span className="badge badge-primary text-[10px] px-1.5 py-0.5 font-bold">
-                  Live Analytics
+                  Analytics
                 </span>
               </div>
               <p className="text-[11px] text-[var(--text-muted)] flex items-center gap-1 font-medium">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] inline-block"></span>
-                Global Trends & Forecast Dashboard
+                InsightPulse Dashboard
               </p>
             </div>
           </div>
@@ -52,7 +58,7 @@ export default function Header({
             onClick={toggleFilterSidebar}
             className="md:hidden btn btn-secondary text-xs px-2.5 py-1.5 flex items-center gap-1.5"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#2563EB]" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#0284c7]" />
             <span>Filters</span>
             {activeFilterCount > 0 && (
               <span className="badge badge-primary text-[10px] px-1.5">{activeFilterCount}</span>
@@ -88,10 +94,10 @@ export default function Header({
             className="btn btn-secondary text-xs"
             title="Toggle Filter Sidebar"
           >
-            <SlidersHorizontal className="w-3.5 h-3.5 text-[#2563EB]" />
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#0284c7]" />
             <span className="font-medium">Filter Panel</span>
             {activeFilterCount > 0 && (
-              <span className="bg-[#2563EB] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-4 text-center">
+              <span className="bg-[#0284c7] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-4 text-center">
                 {activeFilterCount}
               </span>
             )}
@@ -128,14 +134,21 @@ export default function Header({
             </button>
           </div>
 
-          {/* Theme Switcher */}
-          <button
-            onClick={() => setIsDark(!isDark)}
-            className="btn-icon rounded-lg"
-            title={isDark ? "Switch to Light Mode" : "Switch to Dark Mode"}
-          >
-            {isDark ? <Sun className="w-4 h-4 text-[#d97706]" /> : <Moon className="w-4 h-4 text-[#2563EB]" />}
-          </button>
+          {/* User Profile & Logout */}
+          {currentUser && (
+            <div className="flex items-center gap-2 border-l border-[var(--border-color)] pl-2">
+              <div className="w-7 h-7 rounded-full bg-[#e0f2fe] text-[#0284c7] font-bold text-xs flex items-center justify-center border border-[#bae6fd]" title={currentUser.email}>
+                {currentUser.email ? currentUser.email[0].toUpperCase() : 'U'}
+              </div>
+              <button
+                onClick={onLogout}
+                className="btn-icon text-xs text-[#64748b] hover:text-[#e11d48] hover:bg-[#fff1f2]"
+                title="Logout / Switch Account"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
 
       </div>
